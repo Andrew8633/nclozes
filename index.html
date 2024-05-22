@@ -435,8 +435,8 @@ for (let i = 0; i <= 2; i++) {
  
  function makeEm(){
     console.log("art is =" + articleG)
-     console.log("art length =" + articleLengthG)
-     for (let i = 0; i <= articleLengthG - 2; i++){
+     console.log("art length =" + articleLengthG )
+     for (let i = 0; i <= articleLengthG - 4; i++){
          
          addC(i)
      }
@@ -446,7 +446,7 @@ for (let i = 0; i <= 2; i++) {
    function addC(index) {
        
        
-       if (countG <= articleLengthG - 1) {
+       if (countG <= articleLengthG - 2) {
        
        createQuestionElements(index);
        splitty(index);
@@ -569,13 +569,14 @@ for (let i = 0; i <= 2; i++) {
     var article= text1.split(splitRegex);
     var articleLength = article.length;
     
-     console.log(article[41])
-     console.log(article[42])
+     console.log(article[49])
+     console.log(article[48])
 
 
 
     if (articleLength < 2) {
         console.error("Not enough sentences in the article.");
+        addC(index+1);
         return;
     }
 
@@ -589,6 +590,7 @@ for (let i = 0; i <= 2; i++) {
 
     if (!word1 || word1.length === 0) {
         console.error("No matching words found in the target sentence.");
+        addC(index+1);
         return;
     }
      
