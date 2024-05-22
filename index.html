@@ -568,6 +568,9 @@ for (let i = 0; i <= 2; i++) {
     var splitRegex = /[\.\?!]+/g;;
     var article= text1.split(splitRegex);
     var articleLength = article.length;
+    
+     console.log(article[41])
+     console.log(article[42])
 
 
 
@@ -581,7 +584,7 @@ for (let i = 0; i <= 2; i++) {
      console.log(targetSentence)
 
     // Split sentences into words
-    var wordRegex = /\b[a-z]{4,8}\b/g;
+    var wordRegex = /\b[a-z]{4,11}\b/g;
     var word1 = targetSentence.match(wordRegex);
 
     if (!word1 || word1.length === 0) {
