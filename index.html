@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natural Clozes</title>
+    <style>
+  #overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: grey;
+  z-index: 2;
+  cursor: pointer;
+  overflow: auto; /* Allows scrolling when content overflows */
+  padding: 10px; /* Optional: add some padding to the content */
+}
+        .question{
+            border: solid;
+            border-color: darkgray;
+            text-align: left;
+            
+            padding-bottom: 1px;
+            margin-bottom: 25px;
+            font-family: sans-serif;
+            cursor: pointer;
+        }
+        
+        .title{
+            border: solid;
+            border-color: black;
+            text-align: center;
+            position:sticky;
+            top:0px;
+            z-index: 1;
+            background-color: white;
+        }
+        
+        .defTitle {
+             border: solid;
+            border-color: black;
+            text-align: center;
+            position:sticky;
+            top:0px;
+            z-index: 1;
+            background-color: grey;
+        }
+        .main, #overlay{
+            padding-top: 20px;
+            border: dotted;
+            border-color: white;
+            width: 50%;
+            margin-left: 25%;
+            top:0;
+        }
+        .banner{
+            border: dotted;
+            border-color:red;
+            width: 160px;
+            height: 600px;
+            text-align: center;
+        }
+        #left {
+            position: fixed;
+            left: 7%;
+            
+        }
+        #right {
+            position: fixed;
+            left: 80%;
+        }
+       
+        .nextButton {
+         text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            align-items: flex-start;
+             width:40%;
+            margin: 0 auto;
+            border:solid;
+            
+            margin-left: 50px; 
+            margin-top:15px;
+            margin-bottom: 1em;
+            font-size: 25px;
+            right: 90%;
+            height: 35px;
+           
+        }
+        
+        .buttonholder {
+            
+            display: absolute;
+            width:100%;
+             margin: 0 auto;
+            border:none;
+            border-color: ;
+            margin-top:-1vw;
+            
+            margin-bottom: 20px;
+            height: 2vw;
+            padding-left: 15px;
+        }
+        
+        .button{
+            
+            font-family: sans-serif;
+            font-size: 18px;
+            top: -100px;
+            margin-left: 70%;
+            
+            
+            
+            
+        }
+        .buttonish {
+    
+    border: solid;
+    border-color: black;
+    width: 80%;
+    margin: 0 auto; /* Center horizontally */
+    font-family: sans-serif;
+    font-size: 1em;
+    
+    padding-left: 15px;
+            padding-bottom: 10px;
+            padding-top: 10px;
+              vertical-align: text-bottom;
+    
+    text-align: center; /* Center text horizontally */
+            
+        }
+        #credit {
+            color:gray;
+            font-size: 15px;
+            margin-left:70%;
+            margin-top: -5%;
+        }
+        .q1index{
+            margin-left:15%;
+            padding-top: -30px;
+            color: darkgray;
+            font-size: 18px;
+            font-feature-settings: bold;
+            
+        }
+        .clozed, .span{
+            font-size: 1em;
+            padding: 20px;
+        }
+        .cloze{
+            padding-top: 5px;
+        }
+        .spans{
+            color:purple;
+        }
+        .intro{
+          border: solid;
+            border-color: black;
+            text-align: left;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            font-family: sans-serif;
+            cursor: pointer;
+            padding-left: 30px;
+            padding-right: 30px;
+            
+        }
+        
+        
+        .def, .pos{
+  margin-bottom: 1vw;
+  top: 50%;
+  left: 50%;
+  font-size: 1em;
+  color: white;
+  margin-left:2vw;
+    margin-right: 2vw;        
+            
+ /* transform: translate(-50%,-50%);*/
+/*  -ms-transform: translate(-50%,-50%);*/
+      
+}
+        .pos {
+            font-size:20px;
+            border-bottom: dotted lightgray;
+        }
+        #defParent{
+            padding-bottom: 4vw;
+        }
+        #oTitle, .a{
+           color: white; 
+         margin-left:2vw;
+            font-size: 30px;
+            border-bottom: solid black;
+            margin-bottom: 10px;
+        }
+        
+        .down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+        .arrow {
+            display: inline;
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+        .downArrows{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+    @media (max-width: 870px) {
+        .main,  #overlay{
+            
+            width: 100%;
+            margin-left: 0;
+            }
+        .banner {
+            display: none;
+        }
+        .button{
+            
+            
+            font-size: 13px;
+            
+        }
+        h1 {
+        font-size: 1em;
+        }
+        
+        .question{
+            
+            margin-bottom: 130px;
+        }
+        
+}
+    </style>
+</head>
+<body>
+    
+    <div id="articlesource" hidden>wikipedia.org</div>
+    <div id="article" hidden>
+        
+On 19 May 2024, a helicopter crashed in Bakrabad Rural District, near Varzaqan, Iran, while traveling from the Khoda Afarin Dam to Tabriz, killing all on board.[3][4] The Bell 212 utility helicopter was carrying the president of Iran Ebrahim Raisi, foreign minister Hossein Amir-Abdollahian, governor-general of Iran's East Azerbaijan province Malek Rahmati, and the representative of the Supreme Leader in East Azerbaijan Mohammad Ali Ale-Hashem. Raisi's head of security and three members of flight crew were also killed in the crash.[5][6][7]
+
+The crash took place in northern Iran in East Azerbaijan province, near the country's border with Azerbaijan. Rescue operations were hampered by the dense forest terrain and heavy rain, fog, and strong winds.[8] Searchers used drones, search-and-rescue teams, specially trained dogs, and the Copernicus satellite system.[9][10][11]
+
+
+Presidents Raisi (left) and Aliyev (right) on the Azerbaijan–Iran border, hours before the crash
+On 19 May 2024, President of Iran Ebrahim Raisi was in Azerbaijan to commission the Khoda Afarin hydroelectric complex and inaugurate the Giz Galasi hydroelectric complex with President of Azerbaijan Ilham Aliyev.[12] The complex is the third collaborative project between Iran and Azerbaijan on the Aras River.[8][13] A day before the crash, the Iran Meteorological Organization issued an orange weather warning for the region.[14]
+
+The site of the crash
+Following the inauguration of the complex, Raisi, Foreign Minister Hossein Amir-Abdollahian, Governor-General of East Azerbaijan Malek Rahmati, the Supreme Leader's Representative in East Azerbaijan Mohammad Ali Ale-Hashem[15] and Raisi's head of security departed for Tabriz by helicopter.[4] Their aircraft was crewed by two military pilots holding the rank of colonel and a flight technician with the rank of major, and was part of a convoy of three helicopters.[16] At around 13:30 IRST (UTC+03:30), the helicopter crashed approximately 2 kilometres  south west of the village of Uzi[10][8][17] in the Dizmar Forest region, a wildlife corridor near the northern Varzaqan area of East Azerbaijan province.[4][18] Several passengers made emergency calls before the helicopter crashed.[4] Energy Minister Ali Akbar Mehrabian and Housing and Transportation Minister Mehrdad Bazrpash, who were travelling in the other two helicopters, arrived safely in Tabriz.[19][20] It was initally reported that two of the passengers of this flight communicated with the rescue forces, meaning that the accident was probably of low severity.[21]
+
+IRIB and Interior Minister Ahmad Vahidi described the crash as a hard landing caused by bad weather and fog.[19][22] Major-General Mohammad Bagheri, chief of staff of the Islamic Republic of Iran Armed Forces, ordered all its branches to deploy their full resources towards rescue operations.[19] Heavy fog affected search-and-rescue operations in Varzaqan.[9] Reports indicated that search-and-rescue teams were expected to reach the site of the crash by 20:00.[23] By 20:39, Iranian forces were near the site of the crash.[24] Forty rescue teams from the Iranian Red Crescent Society,[19] along with drones, were sent to the area of the crash.[25] According to The Guardian, officials made contact with a passenger and a crew member.[26]
+
+Janez Lenarčič, European Commissioner for Crisis Management, announced that the European Union would activate the Copernicus Emergency Management Service (rapid response satellite mapping) at Iran's request.[27] Armenia, Azerbaijan, Iraq, Qatar, Turkey, and Russia offered to help in the search.[28][29][30]
+
+Iran requested a night vision search and rescue helicopter from Turkey, according to the Turkish Disaster and Emergency Management Presidency.[31] Coordinates from a Turkish Bayraktar Akıncı unmanned aerial vehicle showed the crash site being located on a steep mountain slope 20 kilometres (12 mi) south of the Azerbaijan-Iran border.[32][33]
+
+Later on 19 May, the IRIB reported the helicopter had been found[34] and that there was "no sign of life" at the crash scene.[35] With the exception of its tail,[32] the helicopter had been completely burned following impact.[36] Search operations ended following the recovery of the bodies of those on board on 20 May.[37] Many of the bodies were found to be in a charred condition, but were still identifiable visually.[38] Mohammad Ali Ale-Hashem, the Friday Prayer Imam of Tabriz, had, however, survived for an hour after the crash, even attempted to make contact with the president's office.[39] Deputy Foreign Minister Mahdi Safari said that Ale-Hashem had been in contact twice and had described his condition as "bad" but could hear ambulances nearby.[40]
+
+
+Raisi was the second president of Iran to have died in office, following Mohammad-Ali Rajai, who was killed in a bombing in 1981.[41] Iran's presidential line of succession begins with Mohammad Mokhber, the first of Iran's vice presidents. If power is transferred to the vice president in this way, Iranian law states that a new presidential election must be called within six months.[42] On 20 May, the Iranian cabinet said that the government will continue to operate "without the slightest disruption".[32] That same day, Mokhber was formally designated as acting president by Supreme Leader Ali Khamenei, while Ali Bagheri was appointed as acting foreign minister.[43]
+
+Khamenei, in asking the nation for prayer, said: "The nation doesn't need to be worried or anxious as the administration of the country will not be disrupted at all."[44][45] Prayers for Raisi were held in cities across the country,[4] which were aired by state-run television and encouraged by the Fars News Agency. At the same time, videos of people celebrating and launching fireworks began circulating on social media.[45] The government cancelled a cabinet meeting and instead convened an emergency meeting,[46] during which Raisi's chair was left empty and draped with a black sash.[47] Senior officials of the Supreme National Security Council travelled to Tabriz.[48] Following confirmation of Raisi's death, Khamenei declared five days of national mourning.[43] Raisi's funeral is scheduled on 21 May in Tabriz.[37]
+
+Former Iranian foreign minister Mohammad Javad Zarif blamed the United States for the crash, saying in an interview that the latter's embargo on the sale of aircraft and aviation parts to Iran "will be recorded in the list of US crimes against the Iranian people".[43] Much of Iran's military air fleet was acquired prior to the Iranian Revolution in 1979, but it has faced challenges in obtaining necessary parts due to international sanctions against the country.[8]
+
+Maryam Rajavi, the leader of the exiled dissident People's Mojahedin Organization of Iran, described the crash as a "monumental and irreparable strategic blow to the mullahs' Supreme Leader Ali Khamenei and the entire regime," which would trigger "a series of repercussions and crises" within its leadership.[49] She added that Raisi's legacy was marked by his role in the 1988 executions of Iranian political prisoners.[50].</div>
+    
+    <div id="overlay" onclick="off()">
+        <div id="defTitle" > <h1 id='oTitle'></h1>
+        
+        </div>
+    <div id="defParent">
+                                             
+                </div>
+        
+        
+  
+</div>
+    
+    <div class="banner" id="left">advertisement</div>
+    <div class="banner" id="right">advertisement</div>
+
+    <div class="main" id="main">  
+ 
+       
+        <div class="title"><h1>Natural Clozes</h1></div>
+        
+        <div class="intro">
+          <i>  <b> Natural</b>: Having a normal or usual character <br><br>
+            
+
+            <b>Cloze</b>: Based on or being a test of reading comprehension in which the test taker is asked to supply words that have been systematically deleted from a text. </i> <br><br>
+
+
+The following activities are based on material that is read by millions of native English speaker everyday. <br><br>
+            
+           <b> Every day there is a new article.</b> <br><br>
+            Consistent practice will improve your English. <br><br>
+
+Use this website to:
+<br><br>
+1. Test your vocabulary knowledge <br>
+2. Practice reading for TOEIC, IELTS, TOEFL, and other exams <br>
+3. Learn some new words <br>
+4. Adopt natural English patterns <br><br>
+            
+        <button id  onclick="increase(); this.disabled = true;"><p> <b>Click Here to Start</b></p></button>    
+        </div>
+        
+        <div id="overlay" onclick="off()">
+  <div id="text"></div>
+</div>
+        
+       <!-- <div class="question">
+      <p class="q1index">Sentence #1</p>
+          <p class="clozed" id="cloze0">It fully  <b><span class="spans" id="span0">(?)</span></b> the area of Hackney Wick and includes the part of the 2012 Summer Olympics and Paralympics being built in the Borough.</p>
+          <p id="credit">wikipedia.org</p>
+       
+       <p class="buttonish" id="0a" onclick = "insertSpan(0,'a')" >covered</p><p class="buttonholder"><button class="button"  onclick="lookup('1a')">definition</button></p>
+      
+      <p class="buttonish" id="0b" onclick = "insertSpan(0,'b')" >part</p><p class="buttonholder"><button class="button" id="def1a" onclick="lookup('1b')">definition</button></p>
+      
+      <p class="buttonish" id="0c" onclick = "insertSpan(0,'c')" >summer</p><p class="buttonholder"><button class="button" id="def1a" onclick="lookup('1c')">definition</button></p>
+      
+          <p hidden id="1ans">covered</p>  -->
+        
+   
+            
+  
+    
+    
+    
+        </div>
+    
+
+
+    
+    
+    
+    
+    </body>
+</html>
+    
+    
+    
+    <script>
+        
+        
+        //global
+        
+     var text0G = document.getElementById("article").innerHTML;
+    
+     var citationRegexG = /\[.\]/gm
+     var text1G = text0G.replace(citationRegexG, ""); 
+    
+    var splitRegexG = /[\.\?!]+/g;
+    var articleG= text1G.split(splitRegexG);
+    var articleLengthG = articleG.length;
+    let rightAnsG = 0   
+    let countG = 0
+//////////////////////////////////////////////////////////////////////////////////////////
+ 
+ function increase(){
+    if (countG <= articleLengthG - 2) {
+     addC(countG);
+     countG + 1;
+} else {
+    var qdiv = document.createElement("div");
+    qdiv.className = "question";
+    qdiv.innerText = `You got ${rightAnsG} correct!`    
+    main.appendChild(qdiv);}
+     
+ }
+        
+//////////////////////////////////////////////////////////////////////////////////////////////
+function checkAns(index) {
+    
+    var ans = document.getElementById(index +"ans");
+    var choice = document.getElementById("span" + index)
+    var qHold =  document.getElementById("qdiv" + index)  
+    
+     var choices = ["a", "b", "c"];
+
+for (let i = 0; i <= 2; i++) {
+    var possChoice = document.getElementById(index + choices[i]);
+
+    // Reset the background color of all choices
+    possChoice.style.backgroundColorolor = "white";
+
+    // Highlight the correct answer choice
+    if (possChoice.innerText == ans.innerText) {
+        possChoice.style.backgroundColor = "#98FB98";
+    }
+    if (possChoice.innerText !== ans.innerText) {
+        
+        possChoice.style.backgroundColor = "#FDF5E6";
+    }
+    
+//     qHold.style.backgroundColor = "#FDF5E6";
+    
+    
+}
+    //hightlight rightans in span
+    if (choice.innerText == ans.innerText) {
+        choice.style.color = "green";
+        qHold.style.backgroundColor = "#F0FFF0";
+        rightAnsG++
+    }
+    if (choice.innerText !== ans.innerText) {
+        choice.style.color = "red";
+        
+        qHold.style.backgroundColor = "#FFE4E1";
+    }
+    
+    qHold.disabled = "true";
+      
+    
+}
+    ////////////////////////////////////////////////////////////////////////////////
+ 
+ function makeEm(){
+    console.log("art is =" + articleG)
+     console.log("art length =" + articleLengthG)
+     for (let i = 0; i <= articleLengthG - 2; i++){
+         
+         addC(i)
+     }
+ }
+        
+/////////////////////////////////////////////////////////////////////////////////////
+   function addC(index) {
+       
+       
+       if (countG <= articleLengthG - 1) {
+       
+       createQuestionElements(index);
+       splitty(index);
+   } else {
+    var qdiv = document.createElement("div");
+    qdiv.className = "question";
+    qdiv.innerText = `You got ${rightAnsG} correct!`    
+    main.appendChild(qdiv);}
+   countG++
+   }
+
+///////////////////////////////////////////////////////////////////////////////////
+        
+   function createQuestionElements(index) {
+    
+       
+    var main = document.getElementById("main");
+
+    var qdiv = document.createElement("div");
+    qdiv.className = "question";
+    qdiv.setAttribute("id","qdiv" + index)   
+    main.appendChild(qdiv);
+
+    var qIndex = document.createElement("p");
+    qIndex.className = "q" + index + "index";
+    qIndex.innerText = "Sentence " + (index +  1);
+    qIndex.setAttribute("class","q1index")
+    //qdiv.appendChild(qIndex);
+
+    var cloze = document.createElement("p");
+    cloze.setAttribute("class", "clozed");
+    cloze.setAttribute("id", "cloze" + index);
+    cloze.innerText ="This is a cloze"
+    qdiv.appendChild(cloze);
+
+    var credit = document.createElement("p");
+    credit.setAttribute("id", "credit");
+    credit.innerText = document.getElementById("articlesource").innerHTML
+    qdiv.appendChild(credit);
+
+    var a1 = document.createElement("p");
+    a1.setAttribute("class", "buttonish");
+    a1.setAttribute("id", index + "a");
+    a1.setAttribute("onclick", `insertSpan(${index}, 'a')`);
+    qdiv.appendChild(a1);
+
+    var a1bh = document.createElement("p");
+    a1bh.setAttribute("class", "buttonholder");
+    qdiv.appendChild(a1bh);
+
+    var a1b = document.createElement("button");
+    a1b.setAttribute("class", "button");
+    a1b.innerText = "definition"; 
+    a1b.setAttribute("onclick", `lookup('${index}a')`);
+    a1bh.appendChild(a1b);
+
+    var b1 = document.createElement("p");
+    b1.setAttribute("class", "buttonish");
+    b1.setAttribute("id", index + "b");
+    b1.setAttribute("onclick", `insertSpan(${index}, 'b')`);
+    qdiv.appendChild(b1);
+
+    var b1bh = document.createElement("p");
+    b1bh.setAttribute("class", "buttonholder");
+    qdiv.appendChild(b1bh);
+
+    var b1b = document.createElement("button");
+    b1b.setAttribute("class", "button");
+    b1b.innerText = "definition"; 
+    b1b.setAttribute("onclick", `lookup('${index}b')`);
+    b1bh.appendChild(b1b);
+
+    var c1 = document.createElement("p");
+    c1.setAttribute("class", "buttonish");
+    c1.setAttribute("id", index + "c");
+    c1.setAttribute("onclick", `insertSpan(${index}, 'c')`);
+    qdiv.appendChild(c1);
+
+    var c1bh = document.createElement("p");
+    c1bh.setAttribute("class", "buttonholder");
+    qdiv.appendChild(c1bh);
+
+    var c1b = document.createElement("button");
+    c1b.setAttribute("class", "button");
+    c1b.innerText = "definition"; // Set the inner text here
+    c1b.setAttribute("onclick", `lookup('${index}c')`);
+    c1bh.appendChild(c1b);
+    
+    var nextButton = document.createElement("button");
+    nextButton.setAttribute("class","nextButton")
+    nextButton.setAttribute("onclick", `checkAns('${index}'); increase(); this.disabled = true;`);
+    nextButton.innerText = "Check";
+
+    qdiv.appendChild(nextButton);
+    
+   
+
+    var ans1 = document.createElement("p");
+    ans1.setAttribute("hidden", "");
+    ans1.setAttribute("id", index + "ans");
+    qdiv.appendChild(ans1);
+       
+    var pBreak = document.createElement("p");
+    pBreak.innerHTML = "<br>"
+    main.appendChild(pBreak);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////        
+        
+ function splitty(index) {
+    var text0 = document.getElementById("article").innerHTML;
+    
+     var citationRegex = /\[\d+\]/gm
+     var text1 = text0.replace(citationRegex, ""); 
+    
+    
+    // Split raw text into sentences
+    var splitRegex = /[\.\?!]+/g;;
+    var article= text1.split(splitRegex);
+    var articleLength = article.length;
+
+
+
+    if (articleLength < 2) {
+        console.error("Not enough sentences in the article.");
+        return;
+    }
+
+    var targetSentence = article[index].trim();
+     
+     console.log(targetSentence)
+
+    // Split sentences into words
+    var wordRegex = /\b[a-z]{4,8}\b/g;
+    var word1 = targetSentence.match(wordRegex);
+
+    if (!word1 || word1.length === 0) {
+        console.error("No matching words found in the target sentence.");
+        return;
+    }
+     
+
+    var lLength = word1.length;
+
+    // Create random numbers
+    let abc = ["c", "a", "b", "c"];
+    var rdm = Math.floor(Math.random() * lLength);
+    var rdm2 = Math.floor(Math.random() * 2);
+    let rdmAbc = abc[rdm2];
+//console.log(rdmAbc)
+    var ptargetSentence = targetSentence;
+    var testnnn = ptargetSentence.match(wordRegex);
+    var eachWord = text1.match(wordRegex);
+         
+     let answer = word1[rdm];
+    document.getElementById(index + "ans").innerText = answer;
+    console.log("answerWord =" + answer);
+    let anIndex = eachWord.indexOf(answer);
+     eachWord.splice(anIndex, 1);
+     
+     
+     var rdm3a = Math.ceil(Math.random() * eachWord.length - 1 );
+     let choiceA = document.getElementById(index + 'a')
+     choiceA.innerText = eachWord[rdm3a]
+     eachWord.splice(rdm3a, 1)
+
+    
+     var rdm3b = Math.ceil(Math.random() * eachWord.length - 1);
+     let choiceB = document.getElementById(index + 'b');
+     choiceB.innerText = eachWord[rdm3b]
+     eachWord.splice(rdm3b, 1);
+
+
+     var rdm3c = Math.ceil(Math.random() * eachWord.length - 1);
+     let choiceC = document.getElementById(index + 'c');
+     choiceC.innerText = eachWord[rdm3c]
+
+
+
+    
+    //let answer = word1[rdm];
+    //document.getElementById(index + "ans").innerText = answer;
+    //console.log("answerWord =" + answer);
+    
+     
+    
+    let randomAns = document.getElementById(index + rdmAbc);
+    
+    randomAns.innerText = answer;
+     console.log("answerIndex"+ anIndex)
+     console.log("rdm3a =" + rdm3a)
+     console.log(eachWord[rdm3a])
+     
+     console.log("rdm3b =" + rdm3b)
+     console.log(eachWord[rdm3b])
+     
+     console.log("rdm3c =" + rdm3c)
+     console.log(eachWord[rdm3c])
+     
+     
+     // Display the choices
+   // let choices = [];
+    //choices.push(eachWord[rdm3 - 1] || eachWord[0]);
+    //choices.push(eachWord[rdm3 + 1] || eachWord[eachWord.length - 1]);
+    //choices.push(eachWord[rdm3 + 2] || eachWord[eachWord.length - 1]);
+
+    // Avoid duplicates
+    //choices = choices.map(choice => choice === answer ? eachWord[Math.floor(Math.random() * eachWord.length)] : choice);
+
+    // Show sentence with cloze
+    document.getElementById("cloze" + index).innerHTML =
+        targetSentence = index + 1 + ": " + targetSentence.replace(answer, `<b><span class='spans' id='span${index}'>(??????)</span></b>`) + ".";
+
+}    
+     
+        
+        
+        function on() {
+document.getElementById("overlay").style.display = "inline-block";
+ 
+  //  document.getElementById("text").innerHTML = message;
+}
+
+function off() {
+  document.getElementById("overlay").style.display = "none";
+}
+
+        
+        //// highlights the chosen word and puts it into spave
+function insertSpan(qNumber,qLetter) {
+     
+    for (let i = 0; i<=2; i++){
+        var choices = ["a","b","c"]
+    
+        document.getElementById(qNumber + choices[i]).style.cssText = "background-color: white;"
+    }
+    
+    document.getElementById("span" + qNumber).innerHTML = document.getElementById(qNumber + qLetter).innerText;
+    document.getElementById(qNumber + qLetter).style.cssText = "background-color: beige;"
+    
+}
+        
+       //let meaningsL
+       //let defsL
+        
+        // Fetch the data from the API
+        
+        function lookup(id) {
+            
+        var wordo = document.getElementById(id).innerHTML;
+        fetch('https://api.dictionaryapi.dev/api/v2/entries/en/' + wordo)
+            .then(response => response.json())
+            .then(data => {
+                // Extract the definition from the response
+           var numOfMeanings = data[0].meanings.length;
+        //    var numOfDefs1 = data[0].meanings[0].definitions.length;
+          //  var numOfDefs2 = data[0].meanings[1].definitions.length;
+            
+        //    meaningsL = numOfMeanings
+            
+          //  console.log(numOfDefs1)
+            
+            //const audioWord = data[0].phonetics[0].audio;
+            
+            const pos0 = data[0].meanings[0].partOfSpeech;
+        //    const pos1 = data[0].meanings[1].partOfSpeech;
+            
+            
+          //  const definition0 = data[0].meanings[0].definitions[0].definition;
+            //const definition1 = data[0].meanings[1].definitions[0].definition;
+        //console.log(definition1)
+            
+               // document.getElementById('audioWord').setAttribute("src", audioWord)
+                document.getElementById('oTitle').innerText = wordo;
+                
+                // make and insert the pos and def
+                
+                var defParent = document.getElementById("defParent")
+                
+                defParent.innerHTML = " ";
+                
+    for (let i = 0; i < numOfMeanings && i < data[0].meanings.length; i++) {
+    const pos0 = data[0].meanings[i].partOfSpeech;
+
+    // Create and append the part of speech div
+    let posDiv = document.createElement("div");
+    let posText = document.createTextNode(pos0);
+    posDiv.setAttribute("class", "pos");
+    posDiv.setAttribute("id", `pos-${i}`); // Ensure unique ID if necessary
+    defParent.appendChild(posDiv);
+    posDiv.appendChild(posText);
+
+    // Iterate through all definitions for the current meaning
+    for (let j = 0; j < data[0].meanings[i].definitions.length; j++) {
+        const definition0 = data[0].meanings[i].definitions[j].definition;
+
+        // Create and append the definition div
+        let defDiv = document.createElement("div");
+        let defText = document.createTextNode(definition0);
+        defDiv.setAttribute("class", "def");
+        defDiv.setAttribute("id", `def-${i}-${j}`); // Ensure unique ID if necessary
+        defParent.appendChild(defDiv);
+        defDiv.appendChild(defText);
+    }
+}
+
+            
+            
+               // document.getElementById('def').innerText = definition0;
+                //document.getElementById('pos').innerText = pos0;
+            
+            //    document.getElementById('def1').innerText = definition1;
+              //  document.getElementById('pos1').innerText = pos1;
+                console.log(pos0)
+               // document.getElementById('pos').innerText = pos;
+            on()
+        })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+        } 
+        
+// Function to fetch and display content from another HTML file
+function fetchHTMLContent() {
+    fetch('other-document.html')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.text();
+        })
+        .then(data => {
+        
+        
+            // Insert the fetched HTML content into the div with id="content"
+            document.getElementById('content').innerHTML = data;
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+}
+    </script>
+
