@@ -290,14 +290,15 @@
     
     <div id="articlesource" hidden>wikipedia.org</div>
     <div id="article" hidden>
+        Background
         
- On 24 May 2024, a landslide occurred in Mulitaka, Papua New Guinea. Between 690 and 1,000 people were thought to have been killed; however, only six bodies were recovered.[3][4] Many others are missing, including about 5,500 in the villages of Kaokalam, Tulipana and Yambali alone.[7]
+On 24 May 2024, a landslide occurred in Mulitaka, Papua New Guinea. Between 690 and 1,000 people were thought to have been killed; however, only six bodies were recovered.[3][4] Many others are missing, including about 5,500 in the villages of Kaokalam, Tulipana and Yambali alone.[7]
 
 
 Papua New Guinea has regularly experienced fatal landslides contributed to by its mountainous terrain, weather, climate, poverty and government mismanagement. In 2024, the country saw intense rainfall and flooding.[2] One landslide in April killed 14 people, while another a month prior killed at least 21.[8]
 
 
-On 18 May, a Mw 4.5 earthquake occurred 105 km (65 mi) west of where the landslide happened. It struck 126.2 km (78.4 mi) below the surface.[9] A local said this may have caused the landslide.[1] The Red Cross said that there was no indication that the earthquake caused it, instead attributing it to either gold mining or heavy rain.[2]
+On 18 May, a Mw 4,5 earthquake occurred 105 km (65 mi) west of where the landslide happened. It struck 126,2 km (78,4 mi) below the surface.[9] A local said this may have caused the landslide.[1] The Red Cross said that there was no indication that the earthquake caused it, instead attributing it to either gold mining or heavy rain.[2]
 
 
 The landslide occurred at approximately 03:00 PGT on 24 May (17:00 UTC on 23 May),[10] after a large amount of debris was dislodged from the limestone slopes of Mount Mungalo.[11][2] It destroyed six villages in Maip Muritaka Rural LLG.[12] In Kaokalam village alone, dozens of houses were destroyed and an estimated 500 people were buried.[3] It blocked a highway near the Porgera Gold Mine, and destroyed 150 metres (490 ft) of the main highway leading into Kaokalam, causing concerns over the supply of fuel and goods.[13][1][14] A road construction crew working on the highway was also buried in the landslide.[15]
@@ -402,6 +403,7 @@ Use this website to:
     
      var citationRegexG = /\[.\]/gm
      var text1G = text0G.replace(citationRegexG, ""); 
+     
     
     var splitRegexG = /[\.\?!]+/g;
     var articleG= text1G.split(splitRegexG);
@@ -602,6 +604,8 @@ for (let i = 0; i <= 2; i++) {
     
      var citationRegex = /\[\d+\]/gm
      var text1 = text0.replace(citationRegex, ""); 
+     var breakRegex =/[\n]/gm
+     text1 = text1.replace(breakRegex, "<br>")
     
     
     // Split raw text into sentences
@@ -817,19 +821,42 @@ function insertSpan(qNumber,qLetter) {
         } 
         
 
-function loadContent () {
+function loadContent() {
   // (A) FETCH "DUMMY.HTML"
-  fetch("//art1.html")
- 
+  fetch("https://www.naturalclozes.com/1")
+  
   // (B) RETURN THE RESULT AS TEXT
   .then(res => {
-    if (res.status != 200) { throw new Error("Bad Server Response"); }
+    if (res.status != 200) { 
+      throw new Error("Bad Server Response"); 
+    }
     return res.text();
   })
- 
-  // (C) PUT LOADED CONTENT INTO <DIV>
-  .then(html => document.getElementById("article").innerHTML = html)
- 
+  
+  // (C) PARSE HTML AND EXTRACT SPECIFIC DIV
+  .then(html => {
+    // Create a new DOM parser
+    const parser = new DOMParser();
+    
+    // Parse the fetched HTML string into a document
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    // Extract the specific div by ID (assuming the div you need has id="targetDiv")
+    const specificDiv = doc.getElementById("articleText");
+      
+    
+    // Check if the specific div exists
+    if (specificDiv) {
+      // Insert the content of the specific div into the article div
+      document.getElementById("article").innerHTML = specificDiv.innerHTML;
+    } else {
+      throw new Error("Specific div not found in fetched content.");
+    }
+  
+      document.getElementById("article").innerText = specificDiv.innerText;
+  
+  })
+  
   // (D) HANDLE ERRORS - OPTIONAL
   .catch(err => console.error(err));
 }
