@@ -12,7 +12,11 @@
     
 
     <style>
-         
+         .disabled {
+    pointer-events: none;
+    
+             ;
+}
         body {
             
             display: flex;
@@ -427,6 +431,7 @@ Use this website to:
 //////////////////////////////////////////////////////////////////////////////////////////////
 function checkAns(index) {
     
+    document.getElementById(index + "a").setAttribute("disabled","true")
     var ans = document.getElementById(index +"ans");
     var choice = document.getElementById("span" + index)
     var qHold =  document.getElementById("qdiv" + index)  
@@ -437,7 +442,7 @@ for (let i = 0; i <= 2; i++) {
     var possChoice = document.getElementById(index + choices[i]);
 
     // Reset the background color of all choices
-    possChoice.style.backgroundColorolor = "white";
+    possChoice.style.backgroundColor = "white";
 
     // Highlight the correct answer choice
     if (possChoice.innerText == ans.innerText) {
@@ -448,7 +453,7 @@ for (let i = 0; i <= 2; i++) {
         possChoice.style.backgroundColor = "#FDF5E6";
     }
     
-//     qHold.style.backgroundColor = "#FDF5E6";
+     possChoice.classList.add("disabled")
     
     
 }
