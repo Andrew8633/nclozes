@@ -173,7 +173,8 @@
             color:gray;
             font-size: 15px;
             margin-left:70%;
-            margin-top: -5%;
+            margin-top: 5%;
+            
         }
         .q1index{
             margin-left:15%;
@@ -415,10 +416,10 @@ Use this website to:
     
     <script>
         
-    window.onload = loadContent();    
+    
         //global
         
-     var text0G = document.getElementById("article").innerHTML;
+     var text0G = document.getElementById("article").innerHTML.trim();
     
      var citationRegexG = /\[.\]/gm
      var text1G = text0G.replace(citationRegexG, ""); 
